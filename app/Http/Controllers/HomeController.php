@@ -32,12 +32,12 @@ class HomeController extends Controller
         $data['role'] = $user['role'];
         $data['product'] = $product;
 
-        if ($user['role'] == 'Admin') {
+        // if ($user['role'] == 'Admin') {
             return view('manager.manager_home', $data);
-        }
-        return view('user.user_home', $data);
+        // }
+        // return view('user.user_home', $data);
 
-        var_dump($data);
-        return view('home');
+        // var_dump($data);
+        // return view('home');
     }
 }

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="title">
-    <h1>Manager Dashboard</h1>
+    <h1>{{$role}} Dashboard</h1>
 </div>
 
 
@@ -21,6 +21,8 @@
                 <th>Quantity</th>
                 <th>Order Code</th>
                 <th>Tracking</th>
+                <th>Status</th>
+
                 {{-- @if ($role =='Admin')
                     <th>Action</th>
                 @endif --}}
@@ -28,16 +30,56 @@
         </thead>
         <tbody id="result">
             @foreach ($product as $product)
-                <tr>
-                    <td><a href="#" id = "{{$product->id}}" onclick="modalShow(this); return false;">{{$product->product_name}}</a></td>
-                    <td>{{$product->cust_name}}</td>
-                    <td>{{$product->qty}}</td>
-                    <td>{{$product->code}}</td>
-                    <td>{{$product->status}}</td>
-                    {{-- @if ($role =='Admin')
-                        <td><a href="/meeting/{{$product->id}}/edit"><button class="btn btn-primary">Edit Order</button></a></td>
-                    @endif --}}
-                </tr>
+                @if ($role == 'Quality Control')
+                    <tr>
+                        @if ($product->status == 'Completed')
+                            <td>{{$product->product_name}}</td>
+                            <td>{{$product->cust_name}}</td>
+                            <td>{{$product->qty}}</td>
+                            <td>{{$product->code}}</td>
+                            <td>{{$product->status}}</td>
+                            @if ($product->approval != 'Pending')
+                                <td>{{$product->approval}}</td>
+                            @else
+                                <td>
+                                    <a href="/approve/{{$product->id}}"><button class="btn btn-success">Approve</button></a>
+                                    <a href="/reject/{{$product->id}}"><button class="btn btn-danger">Reject</button></a>
+
+                                </td>
+                            @endif
+                        @endif
+                    </tr>
+                @else
+                    <tr>
+                        @if ($role == 'Manager' || $role == 'Quality Control' || $role == null ||  $role == 'No Role')
+                            <td>{{$product->product_name}}</td>
+                        @else
+                            <td><a href="#" id = "{{$product->id}}" onclick="modalShow(this); return false;">{{$product->product_name}}</a></td>
+                        @endif
+                        <td>{{$product->cust_name}}</td>
+                        <td>{{$product->qty}}</td>
+                        <td>{{$product->code}}</td>
+                        <td>{{$product->status}}</td>
+                        {{-- @if ($role == 'Quality Control')
+
+                            @if ($product->approval != 'Pending')
+                                <td>{{$product->approval}}</td>
+                            @else
+                                <td>
+                                    <a href="/approve/{{$product->id}}"><button class="btn btn-success">Approve</button></a>
+                                    <a href="/reject/{{$product->id}}"><button class="btn btn-danger">Reject</button></a>
+
+                                </td>
+                            @endif
+                        @else --}}
+                            <td>{{$product->approval}}</td>
+                        {{-- @endif --}}
+                        {{-- @if ($role =='Admin')
+                            <td><a href="/meeting/{{$product->id}}/edit"><button class="btn btn-primary">Edit Order</button></a></td>
+                        @endif --}}
+                    </tr>
+                @endif
+
             @endforeach
         </tbody>
 
@@ -123,6 +165,7 @@
                                 <option value="Drilling">Drilling</option>
                                 <option value="Tapping">Tapping</option>
                                 <option value="Grinding">Grinding</option>
+                                <option value="Completed">Completed</option>
                             </select>
 
 

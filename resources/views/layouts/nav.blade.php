@@ -28,9 +28,13 @@
             <h1 class="m-3" style="text-align: center; color:white">Poqox Sdn Bhd</h1>
 
             <a href="/home">Main Dashboard</a>
-            {{-- @if ($role == 'Admin') --}}
-                <a href="/add-stock">Add Stock {{$role}}</a>
-            {{-- @endif --}}
+            @if ($role == 'Operator' || $role == 'Master')
+                <a href="/add-stock">Add Stock</a>
+            @endif
+
+            @if ($role == 'Master')
+                <a href="/users">User List</a>
+            @endif
 
             <div class="logout">
                 <a class="dropdown-item" href="{{ route('logout') }}"
